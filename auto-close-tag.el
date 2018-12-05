@@ -133,12 +133,45 @@ If not found, return -1."
               (not (auto-close-tag-inside-tag)))
     (auto-close-tag-backward-goto-char "<")))
 
+(defun auto-close-tag-get-tag-name ()
+  "Return the tag name."
+  (save-excursion
+    (let ((tag-name ""))
+      (when (auto-close-tag-inside-tag)
+        ;; NOTE(jenchieh): Goto the beginning of the tag.
+        (forward-char 1)
+        (auto-close-tag-backward-goto-char "<")
+
+        (when (auto-close-tag-current-char-equal-p "<")
+          (forward-char 1)
+          (when (auto-close-tag-current-char-equal-p "/")
+            (forward-char 1))
+          (setq tag-name (thing-at-point 'word))
+          (unless tag-name
+            (setq tag-name ""))))
+      tag-name)))
+
+(defun okay-test ()
+  (interactive)
+  (auto-close-tag-goto-backward-tag-not-excluded))
+
+(defun auto-close-tag-goto-backward-tag-not-excluded ()
+  "Goto the backward to that are not excluded in the list."
+  (auto-close-tag-goto-backward-tag)
+  (let ((tag-name (auto-close-tag-get-tag-name)))
+    (while (and (not (auto-close-tag-is-beginning-of-buffer-p))
+                (auto-close-tag-is-contain-list-string auto-close-tag-excluded-tags
+                                                       tag-name))
+      (auto-close-tag-goto-backward-tag)
+      (setq tag-name (auto-close-tag-get-tag-name)))))
+
 (defun auto-close-tag-backward-count-nested-close-tag (&optional nc dnc)
   "Search backward, return the count of the nested closing tag.
 NC : recursive nested count.
 DNC : duplicate nested count."
   (save-excursion
     (let ((nested-count 0)
+          (current-word "")
           (dup-nested-count 1)
           (is-end-tag nil))
       (when nc
@@ -157,13 +190,20 @@ DNC : duplicate nested count."
         ;; If outside of tag, go back then.
         (unless (auto-close-tag-inside-tag)
           (backward-char 1))
+        (setq current-word (thing-at-point 'word))
 
-        (if is-end-tag
+        ;; Ensure `current-word' is something other than nil.
+        (unless current-word
+          (setq current-word ""))
+
+        (unless (auto-close-tag-is-contain-list-string auto-close-tag-excluded-tags
+                                                       current-word)
+          (if is-end-tag
+              (progn
+                (setq nested-count (+ nested-count 1))
+                (setq dup-nested-count (+ dup-nested-count 1)))
             (progn
-              (setq nested-count (+ nested-count 1))
-              (setq dup-nested-count (+ dup-nested-count 1)))
-          (progn
-            (setq dup-nested-count (- dup-nested-count 1))))
+              (setq dup-nested-count (- dup-nested-count 1)))))
 
         (unless (= dup-nested-count 0)
           (setq nested-count
@@ -226,13 +266,11 @@ TAG-NAME : name of the tag."
                ;; Try to find the corresponding tag.
                (save-excursion
                  (let ((nested-count (auto-close-tag-backward-count-nested-close-tag)))
-                   (message "nested-count : %s" nested-count)
-
                    ;; Resolve nested level.
                    (while (not (= nested-count 0))
                      (setq nested-count (- nested-count 1))
-                     (auto-close-tag-goto-backward-tag)
-                     (auto-close-tag-goto-backward-tag))
+                     (auto-close-tag-goto-backward-tag-not-excluded)
+                     (auto-close-tag-goto-backward-tag-not-excluded))
 
                    ;; Head to the target tag.
                    (auto-close-tag-goto-backward-tag)
