@@ -41,10 +41,10 @@ Or you can just enable in specific buffer you want.
 
 ## Screenshot ##
 After typing in the closing bracket of the opening tag, the closing tag
-will be inserted automatically. <br/>
+will be inserted automatically. <br/><br/>
 <img src="./screenshot/auto-close-tag-demo-1.gif" width="600" height="241"/>
 
-To automatically add close tag. <br/>
+To automatically add close tag. <br/><br/>
 <img src="./screenshot/auto-close-tag-demo-2.gif" width="600" height="241"/>
 
 
