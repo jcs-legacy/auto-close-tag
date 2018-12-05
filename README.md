@@ -26,7 +26,7 @@ Set the tag list that would not be auto closed.
                                      "track"
                                      "wbr")
 ```
-
+x
 
 ## Usage ##
 Enable for all buffers.
