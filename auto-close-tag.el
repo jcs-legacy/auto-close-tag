@@ -151,10 +151,6 @@ If not found, return -1."
             (setq tag-name ""))))
       tag-name)))
 
-(defun okay-test ()
-  (interactive)
-  (auto-close-tag-goto-backward-tag-not-excluded))
-
 (defun auto-close-tag-goto-backward-tag-not-excluded ()
   "Goto the backward to that are not excluded in the list."
   (auto-close-tag-goto-backward-tag)
