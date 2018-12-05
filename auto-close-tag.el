@@ -226,11 +226,16 @@ TAG-NAME : name of the tag."
                ;; Try to find the corresponding tag.
                (save-excursion
                  (let ((nested-count (auto-close-tag-backward-count-nested-close-tag)))
+                   (message "nested-count : %s" nested-count)
+
                    ;; Resolve nested level.
                    (while (not (= nested-count 0))
                      (setq nested-count (- nested-count 1))
                      (auto-close-tag-goto-backward-tag)
                      (auto-close-tag-goto-backward-tag))
+
+                   ;; Head to the target tag.
+                   (auto-close-tag-goto-backward-tag)
 
                    ;; Check found corresponding tag.
                    (unless (auto-close-tag-is-beginning-of-buffer-p)
