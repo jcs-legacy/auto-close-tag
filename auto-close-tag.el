@@ -69,6 +69,10 @@ IN-STR : string using to check if is contain one of the IN-LIST."
   "Is at the beginning of buffer?"
   (= (point) (point-min)))
 
+(defun auto-close-tag-is-end-of-buffer-p ()
+  "Is at the end of buffer?"
+  (= (point) (point-max)))
+
 (defun auto-close-tag-current-char-equal-p (c)
   "Check the current character equal to 'C'."
   (if (auto-close-tag-is-beginning-of-buffer-p)
@@ -82,24 +86,75 @@ IN-STR : string using to check if is contain one of the IN-LIST."
               (not (auto-close-tag-current-char-equal-p c)))
     (backward-char 1)))
 
-(defun auto-close-tag-insert-close-tag (n)
+(defun auto-close-tag-forward-goto-char (c)
+  "Goto forward character match 'C'."
+  (unless (auto-close-tag-is-end-of-buffer-p)
+    (forward-char 1))
+  (while (and (not (auto-close-tag-is-end-of-buffer-p))
+              (not (auto-close-tag-current-char-equal-p c)))
+    (forward-char 1)))
+
+(defun auto-close-tag-backward-char-at-point (c)
+  "Search backward for 'C' and return the point.
+If not found, return -1."
+  (save-excursion
+    (auto-close-tag-backward-goto-char c)
+    (if (auto-close-tag-current-char-equal-p c)
+        (point)
+      -1)))
+
+(defun auto-close-tag-forward-char-at-point (c)
+  "Search forward for 'C' and return the point.
+If not found, return -1."
+  (save-excursion
+    (auto-close-tag-forward-goto-char c)
+    (if (auto-close-tag-current-char-equal-p c)
+        (point)
+      -1)))
+
+(defun auto-close-tag-inside-tag ()
+  "Check if current point inside the tag."
+  (let ((backward-less (auto-close-tag-backward-char-at-point "<"))
+        (backward-greater (auto-close-tag-backward-char-at-point ">"))
+        (forward-less (auto-close-tag-forward-char-at-point "<"))
+        (forward-greater (auto-close-tag-forward-char-at-point ">")))
+    (and (not (= -1 backward-less))
+         (not (= -1 forward-greater))
+         (< backward-greater backward-less)
+         (or (< forward-greater forward-less)
+             (= -1 forward-less)))))
+
+
+(defun auto-close-tag-insert-close-tag (tag-name)
   "Insert the closing tag.
-N : name of the tag."
-  (insert (concat "</" n ">")))
+TAG-NAME : name of the tag."
+  (let ((insert-tag-name ""))
+    ;; Ensure tag-name is a string.
+    (when tag-name
+      (setq insert-tag-name tag-name))
+    (unless (auto-close-tag-is-contain-list-string auto-close-tag-excluded-tags
+                                                   insert-tag-name)
+      (save-excursion
+        (insert (concat "</" insert-tag-name ">"))))))
 
 
 (defun auto-close-tag-post-self-insert-hook ()
   "Do stuff post insert."
   ;; NOTE(jenchieh): 62 is the '>' (greater symbol).
   (when (= last-command-event 62)
-    (let ((tag-name ""))
+    (let ((tag-name "")
+          (do-insert nil))
+      ;; Ensure when insert '>' is closing the opening tag.
       (save-excursion
-        (auto-close-tag-backward-goto-char "<")
-        (setq tag-name (thing-at-point 'word)))
-      (unless (auto-close-tag-is-contain-list-string auto-close-tag-excluded-tags
-                                                     tag-name)
+        (backward-char 1)
+        (when (auto-close-tag-inside-tag)
+          (setq do-insert t)))
+
+      (when do-insert
         (save-excursion
-          (auto-close-tag-insert-close-tag tag-name))))))
+          (auto-close-tag-backward-goto-char "<")
+          (setq tag-name (thing-at-point 'word)))
+        (auto-close-tag-insert-close-tag tag-name)))))
 
 
 (defun auto-close-tag-enable ()
