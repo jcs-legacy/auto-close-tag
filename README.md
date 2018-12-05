@@ -44,7 +44,7 @@ After typing in the closing bracket of the opening tag, the closing tag
 will be inserted automatically.
 <img src="./screenshot/auto-close-tag-demo-1.gif" width="600" height="241"/>
 
-To automatically add close tag
+To automatically add close tag.
 <img src="./screenshot/auto-close-tag-demo-2.gif" width="600" height="241"/>
 
 
