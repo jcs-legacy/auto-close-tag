@@ -124,6 +124,53 @@ If not found, return -1."
          (or (< forward-greater forward-less)
              (= -1 forward-less)))))
 
+(defun auto-close-tag-goto-backward-tag ()
+  "Goto the backward tag."
+  (interactive)
+  (auto-close-tag-backward-goto-char "<")
+  (backward-char 1)
+  (while (and (not (auto-close-tag-is-beginning-of-buffer-p))
+              (not (auto-close-tag-inside-tag)))
+    (auto-close-tag-backward-goto-char "<")))
+
+(defun auto-close-tag-backward-count-nested-close-tag (&optional nc dnc)
+  "Search backward, return the count of the nested closing tag.
+NC : recursive nested count.
+DNC : duplicate nested count."
+  (save-excursion
+    (let ((nested-count 0)
+          (dup-nested-count 1)
+          (is-end-tag nil))
+      (when nc
+        (setq nested-count nc))
+      (when dnc
+        (setq dup-nested-count dnc))
+
+      (auto-close-tag-goto-backward-tag)
+
+      (unless (auto-close-tag-is-beginning-of-buffer-p)
+        (forward-char 1)
+
+        (setq is-end-tag (auto-close-tag-current-char-equal-p "/"))
+        (when is-end-tag
+          (forward-char 1))
+        ;; If outside of tag, go back then.
+        (unless (auto-close-tag-inside-tag)
+          (backward-char 1))
+
+        (if is-end-tag
+            (progn
+              (setq nested-count (+ nested-count 1))
+              (setq dup-nested-count (+ dup-nested-count 1)))
+          (progn
+            (setq dup-nested-count (- dup-nested-count 1))))
+
+        (unless (= dup-nested-count 0)
+          (setq nested-count
+                (auto-close-tag-backward-count-nested-close-tag nested-count
+                                                                dup-nested-count))))
+      nested-count)))
+
 
 (defun auto-close-tag-insert-close-tag (tag-name)
   "Insert the closing tag.
@@ -137,24 +184,59 @@ TAG-NAME : name of the tag."
       (save-excursion
         (insert (concat "</" insert-tag-name ">"))))))
 
+(defun auto-close-tag-complete-close-tag (tag-name)
+  "Insert the closing tag.
+TAG-NAME : name of the tag."
+  (let ((insert-tag-name ""))
+    ;; Ensure tag-name is a string.
+    (when tag-name
+      (setq insert-tag-name tag-name))
+    (unless (auto-close-tag-is-contain-list-string auto-close-tag-excluded-tags
+                                                   insert-tag-name)
+      (insert (concat insert-tag-name ">")))))
+
 
 (defun auto-close-tag-post-self-insert-hook ()
   "Do stuff post insert."
-  ;; NOTE(jenchieh): 62 is the '>' (greater symbol).
-  (when (= last-command-event 62)
-    (let ((tag-name "")
-          (do-insert nil))
-      ;; Ensure when insert '>' is closing the opening tag.
-      (save-excursion
-        (backward-char 1)
-        (when (auto-close-tag-inside-tag)
-          (setq do-insert t)))
+  (let ((tag-name "")
+        (is-closing nil)
+        (do-insert nil))
+    (cond (;; NOTE(jenchieh): 62 is the '>' (greater symbol).
+           (= last-command-event 62)
+           (progn
+             ;; Ensure when insert '>' is closing the opening tag.
+             (save-excursion
+               (backward-char 1)
+               (when (auto-close-tag-inside-tag)
+                 (setq do-insert t)))
+             (when do-insert
+               (save-excursion
+                 (auto-close-tag-backward-goto-char "<")
+                 (setq tag-name (thing-at-point 'word)))
+               (auto-close-tag-insert-close-tag tag-name))))
+          (;; NOTE(jenchieh): 47 is the '/' (slash symbol).
+           (= last-command-event 47)
+           (progn
+             (save-excursion
+               ;; Check if input '</' combination.
+               (backward-char 1)
+               (setq is-closing (auto-close-tag-current-char-equal-p "<")))
 
-      (when do-insert
-        (save-excursion
-          (auto-close-tag-backward-goto-char "<")
-          (setq tag-name (thing-at-point 'word)))
-        (auto-close-tag-insert-close-tag tag-name)))))
+             (when is-closing
+               ;; Try to find the corresponding tag.
+               (save-excursion
+                 (let ((nested-count (auto-close-tag-backward-count-nested-close-tag)))
+                   ;; Resolve nested level.
+                   (while (not (= nested-count 0))
+                     (setq nested-count (- nested-count 1))
+                     (auto-close-tag-goto-backward-tag)
+                     (auto-close-tag-goto-backward-tag))
+
+                   ;; Check found corresponding tag.
+                   (unless (auto-close-tag-is-beginning-of-buffer-p)
+                     (setq tag-name (thing-at-point 'word)))))
+               ;; Complete the tag.
+               (auto-close-tag-complete-close-tag tag-name)))))))
 
 
 (defun auto-close-tag-enable ()
