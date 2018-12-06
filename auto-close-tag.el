@@ -36,7 +36,7 @@
   "Automatically add HTML/XML close tag."
   :prefix "auto-close-tag-"
   :group 'tool
-  :link '(url-link :tag "Repository" "https://github.com/jcs090218/auto-close-tag.git"))
+  :link '(url-link :tag "Repository" "https://github.com/jcs090218/auto-close-tag"))
 
 
 (defvar auto-close-tag-excluded-tags '("area"
