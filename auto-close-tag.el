@@ -7,7 +7,7 @@
 ;; Description: Automatically add HTML/XML close tag.
 ;; Keyword: keybindings
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "24.4"))
+;; Package-Requires: ((emacs "24.4") (cl-lib "0.6"))
 ;; URL: https://github.com/jcs090218/auto-close-tag
 
 ;; This file is NOT part of GNU Emacs.
@@ -31,6 +31,9 @@
 ;;
 
 ;;; Code:
+
+(require 'cl-lib)
+
 
 (defgroup auto-close-tag nil
   "Automatically add HTML/XML close tag."
