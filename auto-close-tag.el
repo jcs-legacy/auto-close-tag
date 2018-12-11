@@ -42,23 +42,25 @@
   :link '(url-link :tag "Repository" "https://github.com/jcs090218/auto-close-tag"))
 
 
-(defvar auto-close-tag-excluded-tags '("area"
-                                       "base"
-                                       "br"
-                                       "col"
-                                       "command"
-                                       "embed"
-                                       "hr"
-                                       "img"
-                                       "input"
-                                       "keygen"
-                                       "link"
-                                       "meta"
-                                       "param"
-                                       "source"
-                                       "track"
-                                       "wbr")
-  "Tag names you do not want to close.")
+(defcustom auto-close-tag-excluded-tags '("area"
+                                          "base"
+                                          "br"
+                                          "col"
+                                          "command"
+                                          "embed"
+                                          "hr"
+                                          "img"
+                                          "input"
+                                          "keygen"
+                                          "link"
+                                          "meta"
+                                          "param"
+                                          "source"
+                                          "track"
+                                          "wbr")
+  "Tag names you do not want to close."
+  :group 'auto-close-tag
+  :type 'list)
 
 
 (defun auto-close-tag-is-contain-list-string (in-list in-str)
