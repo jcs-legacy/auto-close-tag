@@ -292,7 +292,6 @@ TAG-NAME : name of the tag."
   (remove-hook 'post-self-insert-hook #'auto-close-tag-post-self-insert-hook t))
 
 
-;;;###autoload
 (define-minor-mode auto-close-tag-mode
   "Minor mode 'auto-close-tag' mode."
   :lighter " ACT"
@@ -305,7 +304,6 @@ TAG-NAME : name of the tag."
   "Turn on the 'auto-close-tag-mode' minor mode."
   (auto-close-tag-mode 1))
 
-;;;###autoload
 (define-globalized-minor-mode global-auto-close-tag-mode
   auto-close-tag-mode auto-close-tag-turn-on-auto-close-tag-mode
   :require 'auto-close-tag)
