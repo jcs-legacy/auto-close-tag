@@ -1,7 +1,8 @@
-# auto-close-tag #
-
 [![Build Status](https://travis-ci.com/jcs090218/auto-close-tag.svg?branch=master)](https://travis-ci.com/jcs090218/auto-close-tag)
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+
+# auto-close-tag #
 
 Automatically add HTML/XML close tag.<br/><br/>
 
