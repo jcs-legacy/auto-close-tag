@@ -4,7 +4,7 @@
 
 # auto-close-tag #
 
-Automatically add HTML/XML close tag.<br/><br/>
+Automatically add HTML/XML close tag.
 
 
 ## Configuration ##
