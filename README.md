@@ -9,7 +9,7 @@ Automatically add HTML/XML close tag.<br/><br/>
 
 ## Configuration ##
 Set the tag list that would not be auto closed.
-```
+```el
 (setq auto-close-tag-excluded-tags '("area"
                                      "base"
                                      "br"
@@ -31,11 +31,11 @@ Set the tag list that would not be auto closed.
 
 ## Usage ##
 Enable for all buffers.
-```
+```el
 (global-auto-close-tag-mode t)
 ```
 Or you can just enable in specific buffer you want.
-```
+```el
 (auto-close-tag-mode t)
 ```
 
