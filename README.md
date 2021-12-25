@@ -51,7 +51,11 @@ will be inserted automatically. <br/><br/>
 To automatically add close tag. <br/><br/>
 <img src="./etc/auto-close-tag-demo-2.gif" width="600" height="241"/>
 
-## Contribution
+## Contribute
+
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![Elisp styleguide](https://img.shields.io/badge/elisp-style%20guide-purple)](https://github.com/bbatsov/emacs-lisp-style-guide)
+[![Donate on paypal](https://img.shields.io/badge/paypal-donate-1?logo=paypal&color=blue)](https://www.paypal.me/jcs090218)
 
 If you would like to contribute to this project, you may either 
 clone and make pull requests to this repository. Or you can 
