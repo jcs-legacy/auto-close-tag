@@ -1,4 +1,4 @@
-;;; auto-close-tag.el --- Automatically add HTML/XML close tag.                     -*- lexical-binding: t; -*-
+;;; auto-close-tag.el --- Automatically add HTML/XML close tag  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2018  Shen, Jen-Chieh
 ;; Created date 2018-12-04 17:04:50
@@ -8,7 +8,7 @@
 ;; Keyword: keybindings
 ;; Version: 0.0.1
 ;; Package-Requires: ((emacs "24.4") (cl-lib "0.6"))
-;; URL: https://github.com/jcs090218/auto-close-tag
+;; URL: https://github.com/jcs-elpa/auto-close-tag
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -39,7 +39,7 @@
   "Automatically add HTML/XML close tag."
   :prefix "auto-close-tag-"
   :group 'tool
-  :link '(url-link :tag "Repository" "https://github.com/jcs090218/auto-close-tag"))
+  :link '(url-link :tag "Repository" "https://github.com/jcs-elpa/auto-close-tag"))
 
 
 (defcustom auto-close-tag-excluded-tags '("area"
