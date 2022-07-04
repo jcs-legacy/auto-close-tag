@@ -7,7 +7,7 @@
 ;; URL: https://github.com/jcs-elpa/auto-close-tag
 ;; Version: 0.0.1
 ;; Package-Requires: ((emacs "24.4") (cl-lib "0.6"))
-;; Keywords: keybindings
+;; Keywords: convenience keybindings
 
 ;; This file is NOT part of GNU Emacs.
 
