@@ -1,7 +1,7 @@
 (package "auto-close-tag" "0.0.1" "Automatically add HTML/XML close tag.")
 
 (website-url "https://github.com/jcs-elpa/auto-close-tag")
-(keywords "keybindings")
+(keywords "convenience" "keybindings")
 
 (package-file "auto-close-tag.el")
 
