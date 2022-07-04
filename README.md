@@ -3,7 +3,7 @@
 # auto-close-tag
 > Automatically add HTML/XML close tag.
 
-[![Build Status](https://travis-ci.com/jcs090218/auto-close-tag.svg?branch=master)](https://travis-ci.com/jcs090218/auto-close-tag)
+[![CI](https://github.com/jcs-elpa/auto-close-tag/actions/workflows/test.yml/badge.svg)](https://github.com/jcs-elpa/auto-close-tag/actions/workflows/test.yml)
 
 ## Configuration
 
