@@ -1,6 +1,6 @@
 ;;; auto-close-tag.el --- Automatically add HTML/XML close tag  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018  Shen, Jen-Chieh
+;; Copyright (C) 2018-2024  Shen, Jen-Chieh
 ;; Created date 2018-12-04 17:04:50
 
 ;; Author: Shen, Jen-Chieh <jcs090218@gmail.com>
